@@ -2,8 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from src.top_stories.build_link import *
 from src.top_stories.dispatch_op import *
+from src.News_GUI.daily_news_gui import *
 
-
+main_list = []
+url_list = []
 def extraction_top_stories(n,main_url):
     content = requests.get(main_url)  # Returns status
     html_content = content.text
@@ -19,8 +21,12 @@ def extraction_top_stories(n,main_url):
             # print(links)
 
             links =  build_link(links,main_url)
+            main_list.append(title)
+            url_list.append(links)
+            # dispatch(title,links)
 
-            dispatch(title,links)
+    return main_list,url_list
+
 
 
 
@@ -32,8 +38,8 @@ def extraction_top_stories(n,main_url):
 
 
 
-if __name__=='__main__':
-    extraction_top_stories(n=0,main_url='https://timesofindia.indiatimes.com/')
+# if __name__=='__main__':
+#     main_list,url_list=extraction_top_stories(n=0,main_url='https://timesofindia.indiatimes.com/')
 
 
 
