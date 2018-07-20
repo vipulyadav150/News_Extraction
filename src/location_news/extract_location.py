@@ -32,6 +32,7 @@ def extract_city_news(main_url):
             nav_link_list.append(inner_link)
             pg_list.append(pg)
     dispatch_wall(title_list,nav_link_list,pg_list)
+    return title_list,nav_link_list
 
 
 def build_link(link,main_url):
@@ -59,4 +60,4 @@ def dispatch_wall(title_list,nav_link_list,pg_list):
 
 
 
-extract_city_news("https://timesofindia.indiatimes.com/city")
+# extract_city_news("https://timesofindia.indiatimes.com/city")

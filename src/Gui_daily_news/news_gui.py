@@ -5,6 +5,7 @@ from tkinter import messagebox
 import time
 from tkinter import Tk
 import time
+from src.location_news.extract_location import *
 
 from src.top_stories.extract_headlines import *
 from src.Latest_News.extract_latest import *
@@ -16,6 +17,118 @@ def set_window():
     kernel_root.geometry('%dx%d'%(screen_width,screen_height))
     kernel_root.title('Daily News!')
     return kernel_root,screen_height,screen_width
+
+
+
+def btn_advanced():
+    def make_kernel():
+        kernel_root2 = Tk()
+        screen_width2 = kernel_root2.winfo_screenwidth()
+        screen_height2 = kernel_root2.winfo_screenheight()
+        kernel_root2.geometry('%dx%d' % (screen_width2, screen_height2))
+        kernel_root2.title('Daily News!')
+
+
+        return generate_frames2(kernel_root2,screen_width2)
+
+    def generate_frames2(kernel_root2, screen_width2):
+        Tops2= Frame(kernel_root2, bg='powder blue', height=50, width=screen_width, relief=SUNKEN)
+        Tops2.pack(side=TOP)
+
+        Low_Tops2 = Frame(kernel_root2, bg='red', height=30, width=screen_width, relief=SUNKEN)
+        Low_Tops2.pack(side=TOP)
+
+        Left2 = Frame(kernel_root2, bg='green', height=700, width=663, relief=SUNKEN)
+        Left2.pack(side=TOP)
+
+        Right2 = Frame(kernel_root2, bg='red', height=700, width=663, relief=SUNKEN)
+        Right2.pack(side=RIGHT)
+        location = StringVar()
+        get_loc  = location.get()
+        txtLocation = Entry(Tops2,font = ('arial', 16,
+                                      'bold'), textvariable = get_loc, bd = 10, insertwidth = 4, bg = 'powder blue',
+                                                                                                      justify = RIGHT)
+        txtLocation.grid(row=3, column=1)
+        return new_pre_labels(Tops2,Low_Tops2,Left2,Right2)
+
+    def new_pre_labels(Tops2,Low_Tops2,Left2,Right2):
+        lbl_main_title2 = Label(Tops2,text='DAILY NEWS!',font=('arial',40,'bold'),
+                            bg='powder blue',fg='Steel Blue',bd=10,anchor='w')
+        lbl_main_title2.grid(row=0,column=0)
+
+
+        lbl_topstories2 = Label(Low_Tops2,text='TOP STORIES!',font=('arial',20,'bold'),
+                               bd=10,fg='PURPLE',anchor='w',bg='red')
+        lbl_topstories2.grid(row=0, column=0)
+        lbl_top_ex2 = Label(Low_Tops2, text='THIS SECTION GIVES COMPLETE LIST OF TOP STORIES TODAY!'+
+                                          'HAVE A GREAT DAY ASHEAD SIR!', font=('arial', 10, 'bold'),
+                               bd=10, fg='PURPLE', anchor='w',bg='red')
+        lbl_top_ex2.grid(row=1, column=1)
+
+        localtime = get_localtime()
+
+        lbl_time2 =  Label(Tops2,text=localtime,font=('arial',20,'bold'),
+                               bd=5,fg='Black',anchor='w')
+        lbl_time.grid(row=1, column=0)
+
+        lbl_latest2 = Label(Left2, text='LATEST NEWS!', font=('arial', 19, 'bold'),
+                               bd=10, fg='green',anchor='w')
+        lbl_latest2.grid(row=0, column=0)
+
+
+        lbl_loc_news2 = Label(Right2, text='IN CHENNAI TODAY!', font=('arial', 25, 'bold'),
+                           bd=10, fg='Steel Blue', anchor='w')
+        lbl_loc_news2.grid(row=0, column=0)
+
+        lbl_loc_ex2 = Label(Right2, text='HELLO @ENC0DED_VIP !THIS SECTION GIVES YOU THE LATEST NEWS OF YOUR LOCATION!',
+                              font=('arial', 10, 'bold'),
+                              bd=10, fg='green', anchor='w')
+        lbl_loc_ex2.grid(row=1, column=0)
+        return populate_location_stories(Tops2,Low_Tops2,Left2,Right2)
+
+    def populate_location_stories(Tops2,Low_Tops2,Left2,Right2):
+        main_list, url_list = extract_city_news("https://timesofindia.indiatimes.com/city")
+        x = len(main_list)
+        print(x)
+        latest_box2 = Listbox(Low_Tops2, width=663, bd=10, cursor='dotbox', selectmode=SINGLE,
+                             font=('comic sans', 8, 'italic'), height=18)  # use height =16
+
+        latest_box2.grid(row=0, column=1)
+        i = 1
+        for t in main_list:
+            temp_title = str(t)
+            l = main_list.index(t)
+            temp_link = url_list[l]
+            latest_box2.insert(END, 'News' + ' ' + temp_title)
+            latest_box2.insert(END, 'Link' + ' ' + (temp_link))
+
+
+
+    return make_kernel()
+
+
+
+
+
+    # kernel_root, screen_height, screen_width = set_window()
+    # Tops, Low_Tops, Left, Right, lbl_main_title, lbl_time, lbl_topstories, lbl_top_ex, lbl_latest, lbl_loc_news, lbl_loc_ex = generate_frames(
+    #     kernel_root, screen_width)
+
+
+
+
+
+
+
+def button_handler():
+    btn_more = Button(Tops,text="CLICK HERE FOR MORE NEWS",bd=10,
+                      padx=12, pady=12, fg='white', font=('arial',12, 'bold'), bg='blue',
+                      command=btn_advanced
+                      )
+    btn_more.grid(row=1,column=1)
+
+
+
 
 def run(kernel_root):
     kernel_root.mainloop()
@@ -37,6 +150,9 @@ def generate_frames(kernel_root,screen_width):
 
     Right = Frame(kernel_root, bg='red', height=700, width=663, relief=SUNKEN)
     Right.pack(side=RIGHT)
+
+
+
     def pre_labels():
         lbl_main_title = Label(Tops,text='DAILY NEWS!',font=('arial',40,'bold'),
                             bg='powder blue',fg='Steel Blue',bd=10,anchor='w')
@@ -130,5 +246,6 @@ if __name__ == '__main__':
     #, lbl_latest_ex before lbl_loc_news
     populate_top_stories(Tops,Low_Tops,Left,Right)
     # , lbl_latest_ex before lbl_loc_news
+    button_handler()
     run(kernel_root)
 
