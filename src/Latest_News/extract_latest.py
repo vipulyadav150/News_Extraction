@@ -17,7 +17,7 @@ def extract_latest_stories(n,main_url):
                     title = w.get('title')
                     links = w.get('href')
                     links = build_link(links,main_url)
-                    dispatch(title,links)
+                    # dispatch(title,links)
                     title_list.append(title)
                     link_list.append(links)
     return title_list,link_list

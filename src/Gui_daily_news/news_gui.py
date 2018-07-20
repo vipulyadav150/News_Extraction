@@ -5,7 +5,7 @@ from tkinter import messagebox
 import time
 from tkinter import Tk
 import time
-from src.location_news.extract_location import *
+# from src.location_news.extract_location import *
 
 from src.top_stories.extract_headlines import *
 from src.Latest_News.extract_latest import *
@@ -21,6 +21,8 @@ def set_window():
 
 
 def btn_advanced():
+    def get_news(location):
+        print("yes i got that!")
     def make_kernel():
         kernel_root2 = Tk()
         screen_width2 = kernel_root2.winfo_screenwidth()
@@ -44,14 +46,78 @@ def btn_advanced():
         Right2 = Frame(kernel_root2, bg='red', height=700, width=663, relief=SUNKEN)
         Right2.pack(side=RIGHT)
         location = StringVar()
-        get_loc  = location.get()
+
         txtLocation = Entry(Tops2,font = ('arial', 16,
-                                      'bold'), textvariable = get_loc, bd = 10, insertwidth = 4, bg = 'powder blue',
+                                      'bold'), textvariable = location, bd = 10, insertwidth = 4, bg = 'powder blue',
                                                                                                       justify = RIGHT)
         txtLocation.grid(row=3, column=1)
-        return new_pre_labels(Tops2,Low_Tops2,Left2,Right2)
+        btn_loc = Button(Tops2, text="CLICK", bd=10,
+                          padx=12, pady=12, fg='white', font=('arial', 12, 'bold'), bg='blue',
+                          command=lambda : get_news(txtLocation.get())
+                          )
+        btn_loc.grid(row=4,column=2)
+        def get_news(location):
+            print(location)
+            return extract_city_news("https://timesofindia.indiatimes.com/city",location)
 
-    def new_pre_labels(Tops2,Low_Tops2,Left2,Right2):
+
+
+
+
+        def extract_city_news(main_url,location):
+            print(main_url)
+            import requests
+            from bs4 import BeautifulSoup
+            title_list = []
+            pg_list = []
+            nav_link_list = []
+            # manual_city = input("Enter city name: ")
+            # manual_city = manual_city.lower()
+
+            main_url = main_url + '/' + location
+
+            content = requests.get(main_url)
+            html_content = content.text
+            soup = BeautifulSoup(html_content, "html.parser")
+            print(main_url)
+            req_content = soup.find('script', {'type': 'application/ld+json'})
+            r_c = soup.find('ul', {'class': 'top-newslist clearfix'})
+            data = req_content.text
+
+            for x in r_c.findAll('li'):
+                for y in x.findAll('a'):
+                    inner_link = y.get('href')
+                    pg = y.get('pg')
+                    title = y.get('title')
+                    link = inner_link
+                    if link.__contains__('/city'):
+                        link_list = link.split('/')
+                        link_list = link_list[3:]
+                        new_link = '/'.join(link_list)
+                        main_url = main_url + '/'
+                        upd_link = main_url + new_link
+                        inner_link = upd_link
+
+                    title_list.append(title)
+                    nav_link_list.append(inner_link)
+                    pg_list.append(pg)
+
+            return new_pre_labels(title_list, nav_link_list, Tops2, Low_Tops2, Left2, Right2)
+            # dispatch_wall(title_list, nav_link_list, pg_list)
+            # return new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2)
+
+        # def build_link(link, main_url):
+        #     if link.__contains__('/city'):
+        #         link_list = link.split('/')
+        #         link_list = link_list[3:]
+        #         new_link = '/'.join(link_list)
+        #         main_url = main_url + '/'
+        #         upd_link = main_url + new_link
+        #         return upd_link
+
+        # return new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2)
+
+    def new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2):
         lbl_main_title2 = Label(Tops2,text='DAILY NEWS!',font=('arial',40,'bold'),
                             bg='powder blue',fg='Steel Blue',bd=10,anchor='w')
         lbl_main_title2.grid(row=0,column=0)
@@ -84,21 +150,21 @@ def btn_advanced():
                               font=('arial', 10, 'bold'),
                               bd=10, fg='green', anchor='w')
         lbl_loc_ex2.grid(row=1, column=0)
-        return populate_location_stories(Tops2,Low_Tops2,Left2,Right2)
+        return populate_location_stories(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2)
 
-    def populate_location_stories(Tops2,Low_Tops2,Left2,Right2):
-        main_list, url_list = extract_city_news("https://timesofindia.indiatimes.com/city")
-        x = len(main_list)
+    def populate_location_stories(title_list, link_list,Tops2,Low_Tops2,Left2,Right2):
+        # main_list, url_list = extract_city_news("https://timesofindia.indiatimes.com/city")
+        x = len(title_list)
         print(x)
         latest_box2 = Listbox(Low_Tops2, width=663, bd=10, cursor='dotbox', selectmode=SINGLE,
                              font=('comic sans', 8, 'italic'), height=18)  # use height =16
 
         latest_box2.grid(row=0, column=1)
         i = 1
-        for t in main_list:
+        for t in title_list:
             temp_title = str(t)
-            l = main_list.index(t)
-            temp_link = url_list[l]
+            l =title_list.index(t)
+            temp_link = link_list[l]
             latest_box2.insert(END, 'News' + ' ' + temp_title)
             latest_box2.insert(END, 'Link' + ' ' + (temp_link))
 
