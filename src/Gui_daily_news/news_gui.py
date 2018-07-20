@@ -5,8 +5,6 @@ from tkinter import messagebox
 import time
 from tkinter import Tk
 import time
-# from src.location_news.extract_location import *
-
 from src.top_stories.extract_headlines import *
 from src.Latest_News.extract_latest import *
 
@@ -18,8 +16,6 @@ def set_window():
     kernel_root.title('Daily News!')
     return kernel_root,screen_height,screen_width
 
-
-
 def btn_advanced():
     def get_news(location):
         print("yes i got that!")
@@ -29,8 +25,6 @@ def btn_advanced():
         screen_height2 = kernel_root2.winfo_screenheight()
         kernel_root2.geometry('%dx%d' % (screen_width2, screen_height2))
         kernel_root2.title('Daily News!')
-
-
         return generate_frames2(kernel_root2,screen_width2)
 
     def generate_frames2(kernel_root2, screen_width2):
@@ -59,10 +53,6 @@ def btn_advanced():
         def get_news(location):
             print(location)
             return extract_city_news("https://timesofindia.indiatimes.com/city",location)
-
-
-
-
 
         def extract_city_news(main_url,location):
             print(main_url)
@@ -103,19 +93,7 @@ def btn_advanced():
                     pg_list.append(pg)
 
             return new_pre_labels(title_list, nav_link_list, Tops2, Low_Tops2, Left2, Right2)
-            # dispatch_wall(title_list, nav_link_list, pg_list)
-            # return new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2)
 
-        # def build_link(link, main_url):
-        #     if link.__contains__('/city'):
-        #         link_list = link.split('/')
-        #         link_list = link_list[3:]
-        #         new_link = '/'.join(link_list)
-        #         main_url = main_url + '/'
-        #         upd_link = main_url + new_link
-        #         return upd_link
-
-        # return new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2)
 
     def new_pre_labels(title_list, nav_link_list,Tops2,Low_Tops2,Left2,Right2):
         lbl_main_title2 = Label(Tops2,text='DAILY NEWS!',font=('arial',40,'bold'),
@@ -168,23 +146,7 @@ def btn_advanced():
             latest_box2.insert(END, 'News' + ' ' + temp_title)
             latest_box2.insert(END, 'Link' + ' ' + (temp_link))
 
-
-
     return make_kernel()
-
-
-
-
-
-    # kernel_root, screen_height, screen_width = set_window()
-    # Tops, Low_Tops, Left, Right, lbl_main_title, lbl_time, lbl_topstories, lbl_top_ex, lbl_latest, lbl_loc_news, lbl_loc_ex = generate_frames(
-    #     kernel_root, screen_width)
-
-
-
-
-
-
 
 def button_handler():
     btn_more = Button(Tops,text="CLICK HERE FOR MORE NEWS",bd=10,
@@ -192,9 +154,6 @@ def button_handler():
                       command=btn_advanced
                       )
     btn_more.grid(row=1,column=1)
-
-
-
 
 def run(kernel_root):
     kernel_root.mainloop()
@@ -242,13 +201,6 @@ def generate_frames(kernel_root,screen_width):
         lbl_latest = Label(Left, text='LATEST NEWS!', font=('arial', 19, 'bold'),
                                bd=10, fg='green',anchor='w')
         lbl_latest.grid(row=0, column=0)
-        # lbl_latest_ex = Label(Left, text='HELLO @ENC0DED_VIP !'+'\n'
-        #                                  'THIS SECTION GIVES YOU'+'\n'
-        #                                  ' THE LATEST NEWS AROUND THE WORLD!', font=('arial', 10, 'bold'),
-        #                    bd=10, fg='green', anchor='w')
-        # lbl_latest_ex.grid(row=1, column=0)
-
-
 
         lbl_loc_news = Label(Right, text='IN CHENNAI TODAY!', font=('arial', 25, 'bold'),
                            bd=10, fg='Steel Blue', anchor='w')
@@ -260,7 +212,7 @@ def generate_frames(kernel_root,screen_width):
         lbl_loc_ex.grid(row=1, column=0)
 
         return Tops,Low_Tops,Left,Right,lbl_main_title,lbl_time,lbl_topstories,lbl_top_ex,lbl_latest,lbl_loc_news,lbl_loc_ex
-        # , lbl_latest_ex before lbl_loc_news
+
     return pre_labels()
 
 
@@ -300,18 +252,15 @@ def populate_top_stories(Tops,Low_Tops,Left,Right):
             latest_box.insert(END, 'News' + ' ' + temp_title)
             latest_box.insert(END, 'Link' + ' ' + (temp_link))
 
-
-
-
     return top_stories()
 
 
 if __name__ == '__main__':
     kernel_root,screen_height,screen_width = set_window()
     Tops,Low_Tops,Left,Right,lbl_main_title, lbl_time, lbl_topstories, lbl_top_ex, lbl_latest, lbl_loc_news, lbl_loc_ex=generate_frames(kernel_root,screen_width)
-    #, lbl_latest_ex before lbl_loc_news
+
     populate_top_stories(Tops,Low_Tops,Left,Right)
-    # , lbl_latest_ex before lbl_loc_news
+
     button_handler()
     run(kernel_root)
 
