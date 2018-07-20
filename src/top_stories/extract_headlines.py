@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from src.top_stories.build_link import *
 from src.top_stories.dispatch_op import *
-from src.News_GUI.daily_news_gui import *
+from src.Gui_daily_news import *
+
 
 main_list = []
 url_list = []
@@ -39,7 +40,7 @@ def extraction_top_stories(n,main_url):
 
 
 # if __name__=='__main__':
-#     main_list,url_list=extraction_top_stories(n=0,main_url='https://timesofindia.indiatimes.com/')
+#     main_list, url_list=extraction_top_stories(n=0,main_url='https://timesofindia.indiatimes.com/')
 
 
 
