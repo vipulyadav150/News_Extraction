@@ -237,115 +237,13 @@ def btn_advanced():
 
     return make_kernel()
 
-
-
-def btn_fuel():
-    def make_kernel_part3():
-        kernel_root3 = Tk()
-        kernel_root3.title('Petrol Prices in different cities')
-        scw = kernel_root3.winfo_screenwidth()
-        sch = kernel_root3.winfo_screenheight()
-        kernel_root3.geometry('%dx%d' % (scw, sch))
-        kernel_root3.mainloop()
-        return make_new_frames(kernel_root3, scw)
-    # return make_kernel_part3()
-
-
-    def make_new_frames(kernel_root3,scw):
-        Topnew = Frame(kernel_root3, bg='powder blue', height=50, width=screen_width, relief=SUNKEN)
-        Topnew.pack(side=TOP)
-        LowTop_new = Frame(kernel_root3, bg='powder blue', height=50, width=screen_width, relief=SUNKEN)
-        Topnew.pack(side=TOP)
-        lbl_fuel = Label(Topnew, text='Enter Location', font=('arial', 40, 'bold'),
-                                bg='powder blue', fg='Steel Blue', bd=10, anchor='w')
-        lbl_fuel.grid(row=0, column=0)
-        location_new = StringVar()
-        txtLocation_new = Entry(Topnew, font=('arial', 16,
-                                         'bold'), textvariable=location_new, bd=10, insertwidth=4, bg='powder blue',
-                            justify=RIGHT)
-        txtLocation_new.grid(row=0, column=1)
-
-        btn_loc_new = Button(Topnew, text="CLICK", bd=10,
-                         padx=12, pady=12, fg='white', font=('arial', 12, 'bold'), bg='blue',
-                         command=lambda: get_loc(txtLocation_new.get())
-                         )
-        btn_loc_new.grid(row=0, column=2)
-
-
-        def get_loc(location_new):
-            print(location_new)
-            manual_city = location_new.lower()
-            main_url = "https://timesofindia.indiatimes.com/city"
-            main_url = main_url + '/' + manual_city
-            return scrape_content(main_url,manual_city)
-
-        def scrape_content(main_url,manual_city):
-            soup = BeautifulSoup(requests.get(main_url).text, "html.parser")
-            req_content = soup.find('div', {'id': 'fuelList'})
-            r_c = req_content
-            cont = []
-            link_list = []
-            for x in r_c:
-                link = x.find('li').find('a').get('href')
-                generated_link = main_url + '/' + '/'.join(link.split('/')[3:])
-
-                new_soup = BeautifulSoup(requests.get(generated_link).text, 'html.parser')
-                required = new_soup.find('div', {'class': 'Normal'}).text
-
-                cont.append(required)
-                link_list.append(generated_link)
-
-            return new_pre_labels3(link_list, manual_city, cont, LowTop_new)
-
-    def new_pre_labels3(generated_link, manual_city,required,LowTop_new):
-        lbl_topstories2 = Label(LowTop_new,text='TOP STORIES!',font=('arial',20,'bold'),
-                               bd=10,fg='PURPLE',anchor='w',bg='red')
-        lbl_topstories2.grid(row=0, column=0)
-        lbl_top_ex2 = Label(LowTop_new, text='THIS SECTION GIVES COMPLETE LIST OF TOP STORIES TODAY!'+
-                                          'HAVE A GREAT DAY ASHEAD SIR!', font=('arial', 10, 'bold'),
-                               bd=10, fg='PURPLE', anchor='w',bg='red')
-        lbl_top_ex2.grid(row=1, column=1)
-
-        return populate_petrol_prices(generated_link,manual_city,required,LowTop_new)
-
-    def populate_petrol_prices(generated_link,manual_city,required,LowTop_new):
-
-
-        # main_list, url_list = extract_city_news("https://timesofindia.indiatimes.com/city")
-        x = len(required)
-        print(x)
-        latest_box3 = Listbox(LowTop_new, width=663, bd=10, cursor='dotbox', selectmode=SINGLE,
-                             font=('comic sans', 8, 'italic'), height=10)  # use height =16
-
-        latest_box3.grid(row=0, column=1)
-        i = 1
-        for t in required:
-            temp_title = str(t)
-            l =required.index(t)
-            temp_link = generated_link[l]
-            latest_box3.insert(END, 'News' + ' ' + temp_title)
-            latest_box3.insert(END, 'Link' + ' ' + (temp_link))
-
-    return make_kernel_part3()
-
-
-
-
-
-
-
-
 def button_handler():
     btn_more = Button(Tops,text="CLICK HERE FOR MORE NEWS",bd=10,
                       padx=12, pady=12, fg='white', font=('arial',12, 'bold'), bg='blue',
                       command=btn_advanced
                       )
     btn_more.grid(row=1,column=1)
-    btn_more = Button(Tops, text="CHECK FUEL PRICES", bd=10,
-                      padx=12, pady=12, fg='white', font=('arial', 12, 'bold'), bg='red',
-                      command=btn_fuel
-                      )
-    btn_more.grid(row=1, column=2)
+    
 
 def run(kernel_root):
     kernel_root.mainloop()
